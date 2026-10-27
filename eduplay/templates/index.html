@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Plataforma local para organizar videoaulas e audiobooks.">
+  <title>EduPlay — sua biblioteca de estudos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="EduPlay início">
+      <span class="brand-mark">E</span><span>Edu<span class="brand-light">Play</span></span>
+    </a>
+    <p class="nav-label">BIBLIOTECA</p>
+    <button class="nav-item active" data-filter="all"><span>▦</span> Todos os conteúdos</button>
+    <button class="nav-item" data-filter="video"><span>▷</span> Videoaulas</button>
+    <button class="nav-item" data-filter="audio"><span>♫</span> Audiobooks</button>
+    <div class="sidebar-bottom">
+      <div class="sidebar-tip">
+        <span class="tip-icon">✦</span>
+        <strong>Seu espaço de aprendizado</strong>
+        <p>Adicione seus próprios materiais e estude no seu ritmo.</p>
+      </div>
+      <span class="version">EduPlay · versão 1.0</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">SEU AMBIENTE DE ESTUDOS</p>
+        <h1>Aprenda no seu ritmo.</h1>
+        <p class="subtitle">Videoaulas e audiobooks em um só lugar.</p>
+      </div>
+      <button class="primary-button" id="open-upload"><span>＋</span> Adicionar conteúdo</button>
+    </header>
+
+    <section class="stats" aria-label="Resumo da biblioteca">
+      <article class="stat-card"><div class="stat-icon purple">▦</div><div><span>Total de conteúdos</span><strong id="total-count">0</strong></div></article>
+      <article class="stat-card"><div class="stat-icon blue">▷</div><div><span>Videoaulas</span><strong id="video-count">0</strong></div></article>
+      <article class="stat-card"><div class="stat-icon orange">♫</div><div><span>Audiobooks</span><strong id="audio-count">0</strong></div></article>
+    </section>
+
+    <section class="library-section">
+      <div class="section-heading">
+        <div><h2>Sua biblioteca</h2><p>Encontre e continue seus estudos.</p></div>
+        <label class="search-box"><span>⌕</span><input id="search" type="search" placeholder="Buscar conteúdo..." aria-label="Buscar conteúdo"></label>
+      </div>
+      <div class="filter-row">
+        <div class="chips" role="group" aria-label="Filtrar biblioteca">
+          <button class="chip selected" data-filter="all">Tudo</button>
+          <button class="chip" data-filter="video">Videoaulas</button>
+          <button class="chip" data-filter="audio">Audiobooks</button>
+        </div>
+        <span class="result-count" id="result-count">0 itens</span>
+      </div>
+      <div id="library-grid" class="library-grid" aria-live="polite"></div>
+      <div id="empty-state" class="empty-state">
+        <div class="empty-art">♫</div>
+        <h3>Sua biblioteca começa aqui</h3>
+        <p>Adicione uma videoaula ou audiobook para começar.</p>
+        <button class="primary-button" id="empty-upload">＋ Adicionar primeiro conteúdo</button>
+      </div>
+    </section>
+    <footer>Feito para estudar melhor <span>·</span> Seus arquivos ficam no seu computador.</footer>
+  </main>
+
+  <dialog id="upload-dialog" class="dialog">
+    <form id="upload-form" enctype="multipart/form-data">
+      <div class="dialog-heading"><div><p class="eyebrow">NOVA MÍDIA</p><h2>Adicionar conteúdo</h2></div><button type="button" class="icon-button" id="close-upload" aria-label="Fechar">×</button></div>
+      <label class="field-label">Tipo de conteúdo
+        <select name="kind" id="kind" required><option value="video">Videoaula</option><option value="audio">Audiobook / áudio</option></select>
+      </label>
+      <label class="field-label">Título
+        <input name="title" id="title" maxlength="120" placeholder="Ex.: Introdução à biologia">
+      </label>
+      <label class="field-label">Matéria / categoria
+        <input name="subject" maxlength="80" placeholder="Ex.: Biologia, História, Idiomas">
+      </label>
+      <label class="field-label">Descrição (opcional)
+        <textarea name="description" rows="3" maxlength="500" placeholder="O que você vai aprender?"></textarea>
+      </label>
+      <label class="field-label">Arquivo de mídia
+        <input type="file" name="file" id="media-file" accept="video/mp4,video/webm,video/ogg,audio/mpeg,audio/mp4,audio/wav,audio/ogg,.mp4,.webm,.ogg,.mp3,.wav,.m4a,.aac,.oga" required>
+        <span class="field-hint" id="file-hint">Vídeo: MP4, WebM ou OGG. O limite é 1 GB.</span>
+      </label>
+      <p id="upload-error" class="error-message" role="alert"></p>
+      <div class="dialog-actions"><button type="button" class="secondary-button" id="cancel-upload">Cancelar</button><button type="submit" class="primary-button" id="submit-upload">Salvar conteúdo</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="player-dialog" class="dialog player-dialog">
+    <div class="dialog-heading"><div><p class="eyebrow" id="player-kind">REPRODUZINDO</p><h2 id="player-title">Conteúdo</h2></div><button type="button" class="icon-button" id="close-player" aria-label="Fechar player">×</button></div>
+    <div id="player-stage" class="player-stage"></div>
+    <p id="player-description" class="player-description"></p>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
